@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1600759833 source:d:\thread\2.2.passing arguments to a thread function\main.cpp
+	<iostream>
+	<thread>
+
+1600759833 source:d:\code-of-cpp-concurrency-in-action\2.2.passing arguments to a thread function\main.cpp
+	<iostream>
+	<thread>
+

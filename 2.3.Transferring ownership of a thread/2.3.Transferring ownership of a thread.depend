@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1600763982 source:d:\thread\2.3.transferring ownership of a thread\main.cpp
+	<iostream>
+	<thread>
+
+1600764017 source:d:\code-of-cpp-concurrency-in-action\2.3.transferring ownership of a thread\main.cpp
+	<iostream>
+	<thread>
+
