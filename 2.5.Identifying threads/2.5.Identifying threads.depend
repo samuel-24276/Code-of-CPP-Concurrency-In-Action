@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1600843271 source:d:\thread\2.5.identifying threads\main.cpp
+	<iostream>
+	<thread>
+

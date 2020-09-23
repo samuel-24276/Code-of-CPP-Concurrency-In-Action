@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1600841802 source:d:\thread\2.4.choosing the number of threads at runtime\main.cpp
+	<iostream>
+	<thread>
+	<numeric>
+	<vector>
+

@@ -29,13 +29,15 @@ std::thread g()
 
 void ff(std::thread t)
 {
+    //如果线程运行过程中发生异常，之后调用的join会被忽略，
+    //为此需要捕获异常并在处理异常时调用join
     try
     {
-        t.join();
+
     }
     catch(...)
     {
-        throw "ff error";
+        t.join();
     }
     std::cout<<"ff"<<std::endl;
 //    std::cout<<t.get_id();
@@ -47,8 +49,55 @@ void gg()
 //    ff(std::thread(some_function));
     std::thread a(some_function);
     ff(std::move(a));
-
+    std::cout<<"gg thread id:"<<std::this_thread::get_id()<<std::endl;
 }
+
+/*
+std::thread支持移动可以创建thread_guard类的实例(定义见清单2.3)，
+并且拥有线程所有权。当引用thread_guard对象所持有的线程时，移动操作就可以
+避免很多不必要的麻烦。当某个对象转移了线程的所有权，就不能对线程进行汇入或
+分离。为了确保线程在程序退出前完成，定义了scoped_thread类。现在，我们来看一下这个类型：
+*/
+class scoped_thread
+{
+  std::thread t;
+public:
+  explicit scoped_thread(std::thread t_): // 1
+    t(std::move(t_))
+  {
+    if(!t.joinable())  // 2
+      throw std::logic_error("No thread");
+  }
+
+  ~scoped_thread()
+  {
+    std::cout<<"scope join"<<std::endl;
+    t.join(); // 3
+  }
+  scoped_thread(scoped_thread const&)=delete;
+  scoped_thread& operator=(scoped_thread const&)=delete;
+};
+
+struct func
+{
+  int& i;
+  func(int& i_) : i(i_) {}
+  void operator() ()
+  {
+    for (unsigned j=0 ; j<1000000 ; ++j)
+    {
+//      do_something(i);           //潜在访问隐患：空引用
+    }
+  }
+};
+
+void scope()
+{
+  int some_local_state;
+  scoped_thread t(std::thread(func(some_local_state)));    // 4
+  std::cout<<"scope"<<std::endl;
+} // 5
+
 int main()
 {
     std::thread t1(some_function);            // 1
@@ -85,10 +134,19 @@ std::thread对象的方式来"丢弃"一个线程)。
     t2 = f();
     t2.join();
     std::thread t4 = std::move(g());
+    std::cout<<"t4 id:"<<t4.get_id()<<std::endl;//线程一旦join，将不再拥有ID
     t4.join();
+
 
     //当所有权可以在函数内部传递，就允许std::thread实例作为参数进行传递
     gg();
 
+    /*
+    新线程会直接传递到scoped_thread中④，而非创建一个独立变量。当主线程到达f()末尾时⑤，
+    scoped_thread对象就会销毁，然后在构造函数中完成汇入③。
+    代码2.3中的thread_guard类，需要在析构中检查线程是否“可汇入”。
+    这里把检查放在了构造函数中②，并且当线程不可汇入时抛出异常。
+    */
+    scope();
     return 0;
 }
