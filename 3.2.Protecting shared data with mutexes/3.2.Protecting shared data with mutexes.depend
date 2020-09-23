@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1600845788 source:d:\code-of-cpp-concurrency-in-action\3.2.protecting shared data with mutexes\main.cpp
+	<iostream>
+	<mutex>
+	<thread>
+	<list>
+	<algorithm>
+
