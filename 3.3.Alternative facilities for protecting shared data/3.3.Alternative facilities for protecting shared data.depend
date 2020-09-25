@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1601003413 source:d:\code-of-cpp-concurrency-in-action\3.3.alternative facilities for protecting shared data\main.cpp
+	<iostream>
+	<vector>
+	<algorithm>
+	<memory>
+	<thread>
+	<mutex>
+	<map>
+	<string>
+	<mutex>
+	<shared_mutex>
+
